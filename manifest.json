@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Textarea Click Popup",
+  "name": "Sumibi",
   "version": "0.1",
   "description": "Shows a popup when a textarea is clicked.",
   "permissions": ["activeTab", "storage"],
