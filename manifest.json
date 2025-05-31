@@ -4,6 +4,7 @@
   "version": "0.1",
   "description": "Shows a popup when a textarea is clicked.",
   "permissions": ["activeTab", "storage"],
+  "host_permissions": ["file:///*"],
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
