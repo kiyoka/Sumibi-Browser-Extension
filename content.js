@@ -1,6 +1,6 @@
 "use strict";
 
-function showInputDialog() {
+function showInputDialog(targetInput) {
     if (document.getElementById('sumibi-input-dialog-overlay')) {
         return;
     }
@@ -30,13 +30,21 @@ function showInputDialog() {
         alignItems: 'stretch',
         minWidth: '200px'
     });
-    const inputField = document.createElement('input');
-    inputField.type = 'text';
-    inputField.style.marginBottom = '10px';
-    dialog.appendChild(inputField);
+    const editField = document.createElement('textarea');
+    editField.style.marginBottom = '10px';
+    editField.style.width = '100%';
+    if (targetInput.tagName.toLowerCase() === 'textarea') {
+        editField.rows = targetInput.rows || 4;
+        editField.style.height = '100px';
+    } else {
+        editField.rows = 1;
+    }
+    editField.value = targetInput.value;
+    dialog.appendChild(editField);
     const closeButton = document.createElement('button');
     closeButton.textContent = '閉じる';
     closeButton.addEventListener('click', function() {
+        targetInput.value = editField.value;
         document.body.removeChild(overlay);
     });
     dialog.appendChild(closeButton);
@@ -47,24 +55,9 @@ console.log("Content script loaded."); // Line 2
 
 document.addEventListener('click', function (event) {
     const target = event.target;
-    if (target.tagName.toLowerCase() === 'input' && target.type === 'text') {
-        showInputDialog();
+    if ((target.tagName.toLowerCase() === 'input' && target.type === 'text') ||
+        target.tagName.toLowerCase() === 'textarea') {
+        showInputDialog(target);
         return;
-    }
-    if (target.tagName.toLowerCase() === 'textarea') {
-        console.log("Textarea clicked! Attempting to send message...");
-
-        if (typeof chrome === 'undefined' || typeof chrome.runtime === 'undefined') {
-            console.warn('content.js: chrome.runtime is undefined. sendMessage skipped.');
-        } else {
-            alert('click!');
-            chrome.runtime.sendMessage({ type: "textarea_clicked" }, function(response) {
-                if (chrome.runtime.lastError) {
-                    console.error("content.js: Error sending message:", chrome.runtime.lastError.message);
-                } else {
-                    console.log("content.js: Message sent successfully. Response:", response);
-                }
-            });
-        }
     }
 });
