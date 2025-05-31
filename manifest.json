@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "Textarea Click Popup",
+  "version": "0.1",
+  "description": "Shows a popup when a textarea is clicked.",
+  "permissions": ["activeTab"],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}
