@@ -9,6 +9,7 @@ document.addEventListener('click', function (event) {
         if (typeof chrome === 'undefined' || typeof chrome.runtime === 'undefined') {
             console.warn('content.js: chrome.runtime is undefined. sendMessage skipped.');
         } else {
+            alert('click!');
             chrome.runtime.sendMessage({ type: "textarea_clicked" }, function(response) {
             if (chrome.runtime.lastError) {
                 console.error("content.js: Error sending message:", chrome.runtime.lastError.message); // Changed to console.error for visibility
