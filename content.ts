@@ -2,6 +2,7 @@ console.log("Content script loaded.");
 
 document.addEventListener('click', function(event) {
   const target = event.target as HTMLElement;
+  console.log("Clicked element tagName:", target.tagName);
   if (target.tagName.toLowerCase() === 'textarea') {
     console.log("Textarea clicked!");
     // Send a message to the popup or background script
