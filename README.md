@@ -11,5 +11,5 @@ sumibi.elと同様に、OpenAIのChatCompletion APIを使ってモードレス�
 - Microsoft Edge
 
 ## 主な機能(予定)
-表示中のコンテンツのinput type=テキストと textarea の編集時、ローマ字をリアルタイムに日本語に変換します。
+コンテンツ内のinput type=text と textarea でローマ字日本語入力ができるようにする拡張です。
 ローマ字から日本語に変換するロジックは、OpenAIのAPIで実現します。
