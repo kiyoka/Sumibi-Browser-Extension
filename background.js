@@ -7,14 +7,12 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     chrome.storage.local.set({ textareaClicked: true }, function() {
       if (chrome.runtime.lastError) {
         console.error("Error setting textareaClicked in storage:", chrome.runtime.lastError);
+        sendResponse({ success: false, error: chrome.runtime.lastError.message });
       } else {
         console.log("textareaClicked flag set to true in chrome.storage.local.");
+        sendResponse({ success: true });
       }
     });
-    // It's good practice to return true if you intend to send a response asynchronously,
-    // though in this specific case, we are not sending a response back to the content script.
-    // However, to prevent the message port from closing prematurely if we were,
-    // and to follow common patterns:
     return true;
   }
 });
