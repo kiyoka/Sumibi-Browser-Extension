@@ -5,15 +5,29 @@ document.addEventListener('DOMContentLoaded', function () {
         // Default message or state
         messageElement.textContent = '...';
     }
-    chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-        if (request.type === "textarea_clicked") {
+
+    // Check storage for the textareaClicked flag
+    chrome.storage.local.get(['textareaClicked'], function(result) {
+        if (chrome.runtime.lastError) {
+            console.error("Error getting textareaClicked from storage:", chrome.runtime.lastError);
+            return;
+        }
+
+        if (result.textareaClicked) {
+            console.log("Popup: textareaClicked flag is true. Setting message to 'click!'.");
             if (messageElement) {
                 messageElement.textContent = 'click!';
             }
-            // Optional: send a response back to the content script
-            // sendResponse({status: "Popup updated"});
+            // Reset the flag in storage
+            chrome.storage.local.set({ textareaClicked: false }, function() {
+                if (chrome.runtime.lastError) {
+                    console.error("Error resetting textareaClicked in storage:", chrome.runtime.lastError);
+                } else {
+                    console.log("Popup: textareaClicked flag reset to false.");
+                }
+            });
+        } else {
+            console.log("Popup: textareaClicked flag is false or not set.");
         }
-        // Keep the message channel open for asynchronous sendResponse if needed, though not used here.
-        return true;
     });
 });
