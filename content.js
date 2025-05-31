@@ -42,14 +42,22 @@ function showInputDialog(targetInput) {
     editField.value = targetInput.value;
     dialog.appendChild(editField);
     const closeButton = document.createElement('button');
-    closeButton.textContent = '閉じる';
+    closeButton.textContent = '反映';
     closeButton.addEventListener('click', function() {
         targetInput.value = editField.value;
         document.body.removeChild(overlay);
     });
     dialog.appendChild(closeButton);
+    dialog.addEventListener('click', function(event) {
+        event.stopPropagation();
+    });
     overlay.appendChild(dialog);
+    overlay.addEventListener('click', function() {
+        document.body.removeChild(overlay);
+    });
     document.body.appendChild(overlay);
+    editField.focus();
+    editField.setSelectionRange(editField.value.length, editField.value.length);
 }
 console.log("Content script loaded."); // Line 2
 
