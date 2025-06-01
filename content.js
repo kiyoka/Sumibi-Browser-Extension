@@ -50,17 +50,23 @@ function showInputDialog(targetInput) {
     }
     editField.value = initialValue;
     dialog.appendChild(editField);
+    const surrounding = (targetInput.tagName.toLowerCase() === 'div')
+        ? (targetInput.textContent ?? '')
+        : (targetInput.value ?? '');
     const convertButton = document.createElement('button');
     convertButton.textContent = '日本語に変換';
     convertButton.addEventListener('click', function() {
-        chrome.runtime.sendMessage({type: 'convert_romaji', text: editField.value}, function(response) {
-            if (response.success) {
-                editField.value = response.result;
-            } else {
-                console.error(response.error);
-                alert('変換中にエラーが発生しました: ' + response.error);
+        chrome.runtime.sendMessage(
+            { type: 'convert_romaji', roman: editField.value, surrounding: surrounding },
+            function(response) {
+                if (response.success) {
+                    editField.value = response.result;
+                } else {
+                    console.error(response.error);
+                    alert('変換中にエラーが発生しました: ' + response.error);
+                }
             }
-        });
+        );
     });
     dialog.appendChild(convertButton);
     const closeButton = document.createElement('button');
@@ -68,14 +74,27 @@ function showInputDialog(targetInput) {
     closeButton.addEventListener('click', function() {
         navigator.clipboard.writeText(editField.value);
         document.body.removeChild(overlay);
+        document.removeEventListener('keydown', _sumibiOnKeyDown);
     });
     dialog.appendChild(closeButton);
+    function _sumibiOnKeyDown(e) {
+        if (!document.getElementById('sumibi-input-dialog-overlay')) {
+            document.removeEventListener('keydown', _sumibiOnKeyDown);
+            return;
+        }
+        if (e.key === 'j' && e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey) {
+            e.preventDefault();
+            convertButton.click();
+        }
+    }
+    document.addEventListener('keydown', _sumibiOnKeyDown);
     dialog.addEventListener('click', function(event) {
         event.stopPropagation();
     });
     overlay.appendChild(dialog);
     overlay.addEventListener('click', function() {
         document.body.removeChild(overlay);
+        document.removeEventListener('keydown', _sumibiOnKeyDown);
     });
     document.body.appendChild(overlay);
     editField.focus();
