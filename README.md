@@ -15,9 +15,10 @@ sumibi.elと同様に、OpenAIのChatCompletion APIを使ってモードレス�
 ローマ字から日本語に変換するロジックは、OpenAIのAPIで実現します。
 
 ## 設定
-OpenAI APIキーは拡張機能のオプション画面から設定してください。
+OpenAI APIキーと使用するChatCompletionモデル名は拡張機能のオプション画面から設定してください。
 
-1. Chromeの拡張機能ページ(chrome://extensions/)で本拡張の「詳細」をクリックし、「拡張機能のオプション」を選択
-2. 表示された設定画面でAPIキーを入力し、「保存」をクリック
+1. Chromeの拡張機能ページ（chrome://extensions/）で本拡張の「詳細」をクリックし、「拡張機能のオプション」を選択
+2. 表示された設定画面でAPIキーとモデル名を入力し、「保存」をクリック
 
-入力したAPIキーはローカルストレージ(chrome.storage.local)に保存されます。
+入力したAPIキーとモデル名はローカルストレージ（chrome.storage.local）に保存されます。
+モデル名のデフォルトは `gpt-4.1` です。

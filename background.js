@@ -29,12 +29,13 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     });
     return true;
   } else if (request.type === "convert_romaji") {
-    chrome.storage.local.get(['openai_api_key'], function(result) {
+    chrome.storage.local.get(['openai_api_key', 'openai_model'], function(result) {
       const apiKey = result.openai_api_key;
       if (!apiKey) {
         sendResponse({ success: false, error: 'OpenAI APIキーが設定されていません。設定画面でAPIキーを入力してください。' });
         return;
       }
+      const model = result.openai_model || 'gpt-4.1';
       fetch("https://api.openai.com/v1/chat/completions", {
         method: "POST",
         headers: {
@@ -42,7 +43,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
           Authorization: "Bearer " + apiKey
         },
         body: JSON.stringify({
-          model: "gpt-3.5-turbo",
+          model: model,
           messages: [
             { role: "system", content: "You are a helpful assistant converting romanized Japanese to proper Japanese text." },
             { role: "user", content: request.text }
