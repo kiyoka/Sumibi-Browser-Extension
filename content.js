@@ -32,13 +32,16 @@ function showInputDialog(targetInput) {
     });
     const editField = document.createElement('textarea');
     editField.style.marginBottom = '10px';
-    editField.style.width = '100%';
+    // サイズをターゲットの入力欄に合わせる
+    const rect = targetInput.getBoundingClientRect();
+    editField.style.width = rect.width + 'px';
     if (targetInput.tagName.toLowerCase() === 'textarea') {
         editField.rows = targetInput.rows || 4;
-        editField.style.height = '100px';
     } else {
         editField.rows = 1;
     }
+    // 高さをターゲットの入力欄に合わせる
+    editField.style.height = rect.height + 'px';
     editField.value = targetInput.value;
     dialog.appendChild(editField);
     const closeButton = document.createElement('button');
