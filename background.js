@@ -28,5 +28,37 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       }
     });
     return true;
+  } else if (request.type === "convert_romaji") {
+    chrome.storage.local.get(['openai_api_key'], function(result) {
+      const apiKey = result.openai_api_key;
+      if (!apiKey) {
+        sendResponse({ success: false, error: 'OpenAI APIキーが設定されていません。設定画面でAPIキーを入力してください。' });
+        return;
+      }
+      fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + apiKey
+        },
+        body: JSON.stringify({
+          model: "gpt-3.5-turbo",
+          messages: [
+            { role: "system", content: "You are a helpful assistant converting romanized Japanese to proper Japanese text." },
+            { role: "user", content: request.text }
+          ]
+        })
+      })
+        .then(response => response.json())
+        .then(data => {
+          const resultText =
+            data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content
+              ? data.choices[0].message.content.trim()
+              : "";
+          sendResponse({ success: true, result: resultText });
+        })
+        .catch(error => sendResponse({ success: false, error: error.toString() }));
+    });
+    return true;
   }
 });

@@ -50,6 +50,19 @@ function showInputDialog(targetInput) {
     }
     editField.value = initialValue;
     dialog.appendChild(editField);
+    const convertButton = document.createElement('button');
+    convertButton.textContent = '日本語に変換';
+    convertButton.addEventListener('click', function() {
+        chrome.runtime.sendMessage({type: 'convert_romaji', text: editField.value}, function(response) {
+            if (response.success) {
+                editField.value = response.result;
+            } else {
+                console.error(response.error);
+                alert('変換中にエラーが発生しました: ' + response.error);
+            }
+        });
+    });
+    dialog.appendChild(convertButton);
     const closeButton = document.createElement('button');
     closeButton.textContent = 'クリップボードにコピー';
     closeButton.addEventListener('click', function() {

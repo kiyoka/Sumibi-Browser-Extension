@@ -1,17 +1,6 @@
 # Build Process
 
-1. **Install Dependencies:**
-   Open your terminal and navigate to the project's root directory. Then, run the following command to install the necessary dependencies:
-   ```bash
-   npm install
-   ```
-
-2. **Build the Extension:**
-   After the dependencies are installed, you can build the extension by running the following command:
-   ```bash
-   npm run build
-   ```
-   This command will compile the TypeScript files into JavaScript files, preparing the extension for use.
+この拡張機能はビルド不要です。ソースコードをそのままアンパック済み拡張機能として読み込んでください。
 
 # Debugging Process
 
