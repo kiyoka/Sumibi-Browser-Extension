@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Sumibi",
   "version": "0.1",
-  "description": "Adds 'Edit with Sumibi' option to context menu for input and textarea.",
+  "description": "Adds 'Edit with Sumibi' option to context menu for input, textarea, and contenteditable div elements.",
   "permissions": ["activeTab", "storage", "contextMenus"],
   "host_permissions": ["file:///*"],
   "content_scripts": [

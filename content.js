@@ -42,7 +42,13 @@ function showInputDialog(targetInput) {
     }
     // 高さをターゲットの入力欄に合わせる
     editField.style.height = rect.height + 'px';
-    editField.value = targetInput.value;
+    let initialValue;
+    if (targetInput.tagName.toLowerCase() === 'div') {
+        initialValue = targetInput.textContent ?? '';
+    } else {
+        initialValue = targetInput.value ?? '';
+    }
+    editField.value = initialValue;
     dialog.appendChild(editField);
     const closeButton = document.createElement('button');
     closeButton.textContent = 'クリップボードにコピー';
@@ -67,8 +73,12 @@ console.log("Content script loaded.");
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.type === "open_sumibi_dialog") {
         const target = document.activeElement;
-        if ((target.tagName?.toLowerCase() === 'input' && target.type === 'text') ||
-            target.tagName?.toLowerCase() === 'textarea') {
+        if (
+            (target.tagName?.toLowerCase() === 'input' && target.type === 'text') ||
+            target.tagName?.toLowerCase() === 'textarea' ||
+            (target.tagName?.toLowerCase() === 'div' &&
+             target.getAttribute('contenteditable') === 'true')
+        ) {
             showInputDialog(target);
         }
     }
