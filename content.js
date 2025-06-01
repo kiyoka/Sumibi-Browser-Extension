@@ -42,9 +42,9 @@ function showInputDialog(targetInput) {
     editField.value = targetInput.value;
     dialog.appendChild(editField);
     const closeButton = document.createElement('button');
-    closeButton.textContent = '反映';
+    closeButton.textContent = 'クリップボードにコピー';
     closeButton.addEventListener('click', function() {
-        targetInput.value = editField.value;
+        navigator.clipboard.writeText(editField.value);
         document.body.removeChild(overlay);
     });
     dialog.appendChild(closeButton);
