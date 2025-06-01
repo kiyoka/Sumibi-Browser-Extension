@@ -59,13 +59,14 @@ function showInputDialog(targetInput) {
     editField.focus();
     editField.setSelectionRange(editField.value.length, editField.value.length);
 }
-console.log("Content script loaded."); // Line 2
+console.log("Content script loaded.");
 
-document.addEventListener('click', function (event) {
-    const target = event.target;
-    if ((target.tagName.toLowerCase() === 'input' && target.type === 'text') ||
-        target.tagName.toLowerCase() === 'textarea') {
-        showInputDialog(target);
-        return;
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.type === "open_sumibi_dialog") {
+        const target = document.activeElement;
+        if ((target.tagName?.toLowerCase() === 'input' && target.type === 'text') ||
+            target.tagName?.toLowerCase() === 'textarea') {
+            showInputDialog(target);
+        }
     }
 });
