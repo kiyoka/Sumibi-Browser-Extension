@@ -1,6 +1,20 @@
 // background.js
 console.log("Background script loaded.");
 
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.contextMenus.create({
+    id: "sumibi-edit",
+    title: "Edit with Sumibi",
+    contexts: ["editable"]
+  });
+});
+
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+  if (info.menuItemId === "sumibi-edit" && tab.id) {
+    chrome.tabs.sendMessage(tab.id, { type: "open_sumibi_dialog" });
+  }
+});
+
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.type === "textarea_clicked") {
     console.log("Background script received textarea_clicked message.");
