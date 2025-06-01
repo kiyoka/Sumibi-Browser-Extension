@@ -50,17 +50,26 @@ function showInputDialog(targetInput) {
     }
     editField.value = initialValue;
     dialog.appendChild(editField);
-    const surrounding = (targetInput.tagName.toLowerCase() === 'div')
-        ? (targetInput.textContent ?? '')
-        : (targetInput.value ?? '');
     const convertButton = document.createElement('button');
     convertButton.textContent = '日本語に変換';
+    const skipCharsRegex = /[-a-zA-Z0-9.,@:`\\+!\[\]\?;'\t ]/;
     convertButton.addEventListener('click', function() {
+        const text = editField.value;
+        const cursorPos = editField.selectionStart || 0;
+        let start = cursorPos;
+        while (start > 0 && skipCharsRegex.test(text.charAt(start - 1))) start--;
+        const roman = text.substring(start, cursorPos);
+        const surrounding = text;
+        if (!roman) return;
         chrome.runtime.sendMessage(
-            { type: 'convert_romaji', roman: editField.value, surrounding: surrounding },
+            { type: 'convert_romaji', roman, surrounding },
             function(response) {
                 if (response.success) {
-                    editField.value = response.result;
+                    const resultText = response.result;
+                    const newText = text.substring(0, start) + resultText + text.substring(cursorPos);
+                    editField.value = newText;
+                    const newPos = start + resultText.length;
+                    editField.setSelectionRange(newPos, newPos);
                 } else {
                     console.error(response.error);
                     alert('変換中にエラーが発生しました: ' + response.error);

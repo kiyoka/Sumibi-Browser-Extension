@@ -13,7 +13,7 @@ sumibi.elと同様に、OpenAIのChatCompletion APIを使ってモードレス�
 ## 主な機能(予定)
 コンテンツ内のinput type=text、textarea、およびcontenteditable属性を持つdiv要素でローマ字日本語入力ができるようにする拡張です。
 ローマ字から日本語に変換するロジックは、OpenAIのAPIで実現します。
-- ダイアログ内で Ctrl+Jを押すことで「日本語に変換」が実行されます。
+- ダイアログ内で Ctrl+Jを押すか「日本語に変換」ボタンをクリックすると、カーソル位置から前方のローマ字のみを日本語に変換します。
 
 ## 設定
 OpenAI APIキーと使用するChatCompletionモデル名は拡張機能のオプション画面から設定してください。
