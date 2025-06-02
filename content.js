@@ -108,6 +108,12 @@ function showInputDialog(targetInput) {
     document.body.appendChild(overlay);
     editField.focus();
     editField.setSelectionRange(editField.value.length, editField.value.length);
+    editField.addEventListener('input', function() {
+        const pos = this.selectionStart || 0;
+        if (pos >= 2 && this.value.substring(pos - 2, pos) === '  ') {
+            convertButton.click();
+        }
+    });
 }
 console.log("Content script loaded.");
 
