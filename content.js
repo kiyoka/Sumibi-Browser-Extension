@@ -42,6 +42,11 @@ function showInputDialog(targetInput) {
     }
     // 高さをターゲットの入力欄に合わせる
     editField.style.height = rect.height + 'px';
+    // ダイアログを元の入力欄と重なる位置に表示
+    dialog.style.position = 'absolute';
+    dialog.style.top      = (rect.top + window.scrollY) + 'px';
+    dialog.style.left     = (rect.left + window.scrollX) + 'px';
+    dialog.style.opacity  = '0.7';
     let initialValue;
     if (targetInput.tagName.toLowerCase() === 'div') {
         initialValue = targetInput.textContent ?? '';
