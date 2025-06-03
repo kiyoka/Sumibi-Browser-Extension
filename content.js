@@ -42,6 +42,12 @@ function showInputDialog(targetInput) {
     }
     // 高さをターゲットの入力欄に合わせる
     editField.style.height = rect.height + 'px';
+    // ダイアログ内のtextareaが元の入力欄と重なる位置に表示
+    dialog.style.position = 'absolute';
+    const padding = parseInt(dialog.style.padding, 10) || 0;
+    dialog.style.top      = (rect.top + window.scrollY - padding) + 'px';
+    dialog.style.left     = (rect.left + window.scrollX - padding) + 'px';
+    dialog.style.opacity  = '0.7';
     let initialValue;
     if (targetInput.tagName.toLowerCase() === 'div') {
         initialValue = targetInput.textContent ?? '';
@@ -50,23 +56,70 @@ function showInputDialog(targetInput) {
     }
     editField.value = initialValue;
     dialog.appendChild(editField);
+    const convertButton = document.createElement('button');
+    convertButton.textContent = '日本語に変換';
+    const skipCharsRegex = /[-a-zA-Z0-9.,@:`\\+!\[\]\?;'\t ]/;
+    convertButton.addEventListener('click', function() {
+        const text = editField.value;
+        const cursorPos = editField.selectionStart || 0;
+        let start = cursorPos;
+        while (start > 0 && skipCharsRegex.test(text.charAt(start - 1))) start--;
+        const roman = text.substring(start, cursorPos);
+        const surrounding = text;
+        if (!roman) return;
+        chrome.runtime.sendMessage(
+            { type: 'convert_romaji', roman, surrounding },
+            function(response) {
+                if (response.success) {
+                    const resultText = response.result;
+                    const newText = text.substring(0, start) + resultText + text.substring(cursorPos);
+                    editField.value = newText;
+                    const newPos = start + resultText.length;
+                    editField.setSelectionRange(newPos, newPos);
+                } else {
+                    console.error(response.error);
+                    alert('変換中にエラーが発生しました: ' + response.error);
+                }
+            }
+        );
+    });
+    dialog.appendChild(convertButton);
     const closeButton = document.createElement('button');
     closeButton.textContent = 'クリップボードにコピー';
     closeButton.addEventListener('click', function() {
         navigator.clipboard.writeText(editField.value);
         document.body.removeChild(overlay);
+        document.removeEventListener('keydown', _sumibiOnKeyDown);
     });
     dialog.appendChild(closeButton);
+    function _sumibiOnKeyDown(e) {
+        if (!document.getElementById('sumibi-input-dialog-overlay')) {
+            document.removeEventListener('keydown', _sumibiOnKeyDown);
+            return;
+        }
+        if (e.key === 'j' && e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey) {
+            e.preventDefault();
+            convertButton.click();
+        }
+    }
+    document.addEventListener('keydown', _sumibiOnKeyDown);
     dialog.addEventListener('click', function(event) {
         event.stopPropagation();
     });
     overlay.appendChild(dialog);
     overlay.addEventListener('click', function() {
         document.body.removeChild(overlay);
+        document.removeEventListener('keydown', _sumibiOnKeyDown);
     });
     document.body.appendChild(overlay);
     editField.focus();
     editField.setSelectionRange(editField.value.length, editField.value.length);
+    editField.addEventListener('input', function() {
+        const pos = this.selectionStart || 0;
+        if (pos >= 2 && this.value.substring(pos - 2, pos) === '  ') {
+            convertButton.click();
+        }
+    });
 }
 console.log("Content script loaded.");
 

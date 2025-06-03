@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Sumibi 設定</title>
+</head>
+<body>
+  <h1>Sumibi 設定</h1>
+  <label for="apiKey">OpenAI API Key:</label><br/>
+  <input type="password" id="apiKey" style="width: 100%;" /><br/>
+  <label for="model">モデル名 (ChatCompletion API のモデル名):</label><br/>
+  <input type="text" id="model" style="width: 100%;" placeholder="gpt-4.1" /><br/>
+  <button id="saveBtn">保存</button>
+  <div id="status" style="margin-top: 10px; color: green;"></div>
+  <script src="options.js"></script>
+</body>
+</html>
