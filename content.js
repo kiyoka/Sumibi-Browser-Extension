@@ -137,6 +137,11 @@ function showInputDialog(targetInput) {
         const tag = targetInput.tagName.toLowerCase();
         if (tag === 'input' || tag === 'textarea') {
             targetInput.value = editField.value;
+        } else if (tag === 'div') {
+            if (editField.value !== initialValue) {
+                navigator.clipboard.writeText(editField.value);
+                alert('クリップボードにコピーしました');
+            }
         }
         document.body.removeChild(overlay);
         document.removeEventListener('keydown', _sumibiOnKeyDown);
