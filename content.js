@@ -56,10 +56,9 @@ function showInputDialog(targetInput) {
     }
     editField.value = initialValue;
     dialog.appendChild(editField);
-    const convertButton = document.createElement('button');
-    convertButton.textContent = '日本語に変換';
     const skipCharsRegex = /[-a-zA-Z0-9.,@:`\\+!\[\]\?;'\t ]/;
-    convertButton.addEventListener('click', function() {
+
+    function doConvert() {
         const text = editField.value;
         const cursorPos = editField.selectionStart || 0;
         let start = cursorPos;
@@ -82,8 +81,7 @@ function showInputDialog(targetInput) {
                 }
             }
         );
-    });
-    dialog.appendChild(convertButton);
+    }
     const closeButton = document.createElement('button');
     closeButton.textContent = 'クリップボードにコピー';
     closeButton.addEventListener('click', function() {
@@ -99,7 +97,7 @@ function showInputDialog(targetInput) {
         }
         if (e.key === 'j' && e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey) {
             e.preventDefault();
-            convertButton.click();
+            doConvert();
         }
     }
     document.addEventListener('keydown', _sumibiOnKeyDown);
@@ -117,7 +115,7 @@ function showInputDialog(targetInput) {
     editField.addEventListener('input', function() {
         const pos = this.selectionStart || 0;
         if (pos >= 2 && this.value.substring(pos - 2, pos) === '  ') {
-            convertButton.click();
+            doConvert();
         }
     });
 }
