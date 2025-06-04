@@ -3,6 +3,11 @@
   "name": "Sumibi",
   "version": "0.1",
   "description": "Adds 'Edit with Sumibi' option to context menu for input, textarea, and contenteditable div elements.",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
   "permissions": ["activeTab", "storage", "contextMenus"],
   "host_permissions": ["file:///*", "https://api.openai.com/*"],
   "content_scripts": [
