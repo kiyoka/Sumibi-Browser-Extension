@@ -83,13 +83,41 @@ function showInputDialog(targetInput) {
         );
     }
     const closeButton = document.createElement('button');
-    closeButton.textContent = 'クリップボードにコピー';
-    closeButton.addEventListener('click', function() {
-        navigator.clipboard.writeText(editField.value);
+    const tagName = targetInput.tagName.toLowerCase();
+    if (tagName === 'input' || tagName === 'textarea') {
+        closeButton.textContent = '反映';
+        closeButton.addEventListener('click', function() {
+            targetInput.value = editField.value;
+            document.body.removeChild(overlay);
+            document.removeEventListener('keydown', _sumibiOnKeyDown);
+        });
+    } else {
+        closeButton.textContent = 'クリップボードにコピー';
+        closeButton.addEventListener('click', function() {
+            navigator.clipboard.writeText(editField.value);
+            document.body.removeChild(overlay);
+            document.removeEventListener('keydown', _sumibiOnKeyDown);
+        });
+    }
+    dialog.appendChild(closeButton);
+
+    const cancelButton = document.createElement('button');
+    cancelButton.textContent = '×';
+    Object.assign(cancelButton.style, {
+        position: 'absolute',
+        top: '5px',
+        right: '5px',
+        background: 'transparent',
+        border: 'none',
+        fontSize: '16px',
+        cursor: 'pointer'
+    });
+    cancelButton.addEventListener('click', function(e) {
+        e.stopPropagation();
         document.body.removeChild(overlay);
         document.removeEventListener('keydown', _sumibiOnKeyDown);
     });
-    dialog.appendChild(closeButton);
+    dialog.appendChild(cancelButton);
     function _sumibiOnKeyDown(e) {
         if (!document.getElementById('sumibi-input-dialog-overlay')) {
             document.removeEventListener('keydown', _sumibiOnKeyDown);
@@ -106,6 +134,10 @@ function showInputDialog(targetInput) {
     });
     overlay.appendChild(dialog);
     overlay.addEventListener('click', function() {
+        const tag = targetInput.tagName.toLowerCase();
+        if (tag === 'input' || tag === 'textarea') {
+            targetInput.value = editField.value;
+        }
         document.body.removeChild(overlay);
         document.removeEventListener('keydown', _sumibiOnKeyDown);
     });
