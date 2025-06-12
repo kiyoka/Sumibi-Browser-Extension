@@ -5,16 +5,52 @@
   <meta charset="utf-8">
   <style>
     body {
-      width: 150px;
-      height: 50px;
+      width: 300px;
       display: flex;
-      justify-content: center;
-      align-items: center;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
       font-family: sans-serif;
+      padding: 8px;
+      box-sizing: border-box;
+    }
+    #apiInfo {
+      width: 100%;
+      margin-bottom: 8px;
+      border-collapse: collapse;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+    #apiInfo th, #apiInfo td {
+      padding: 4px 6px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+    #apiInfo th {
+      background-color: #f5f5f5;
+      white-space: nowrap;
+    }
+    /* 長いURLなどをセル内で折り返す */
+    #apiInfo td {
+      word-break: break-all;
+    }
+    #message {
+      font-size: 14px;
+      width: 100%;
     }
   </style>
 </head>
 <body>
+  <table id="apiInfo">
+    <tr>
+      <th>API Endpoint</th>
+      <td><span id="endpoint"></span></td>
+    </tr>
+    <tr>
+      <th>Model</th>
+      <td><span id="modelName"></span></td>
+    </tr>
+  </table>
   <div id="message"></div>
   <script src="popup.js"></script>
 </body>

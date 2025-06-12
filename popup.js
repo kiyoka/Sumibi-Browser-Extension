@@ -6,28 +6,29 @@ document.addEventListener('DOMContentLoaded', function () {
         messageElement.textContent = '...';
     }
 
-    // Check storage for the textareaClicked flag
-    chrome.storage.local.get(['textareaClicked'], function(result) {
+    // Show API endpoint and model name
+    const endpointElem = document.getElementById('endpoint');
+    const modelElem = document.getElementById('modelName');
+    if (endpointElem) {
+        endpointElem.textContent = 'https://api.openai.com/v1/chat/completions';
+    }
+    chrome.storage.local.get(['openai_model', 'textareaClicked'], function(result) {
         if (chrome.runtime.lastError) {
-            console.error("Error getting textareaClicked from storage:", chrome.runtime.lastError);
+            console.error('Popup: error getting storage:', chrome.runtime.lastError);
             return;
         }
-
+        if (modelElem) {
+            modelElem.textContent = result.openai_model || 'gpt-4.1';
+        }
         if (result.textareaClicked) {
-            console.log("Popup: textareaClicked flag is true. Setting message to 'click!'.");
             if (messageElement) {
                 messageElement.textContent = 'click!';
             }
-            // Reset the flag in storage
             chrome.storage.local.set({ textareaClicked: false }, function() {
                 if (chrome.runtime.lastError) {
-                    console.error("Error resetting textareaClicked in storage:", chrome.runtime.lastError);
-                } else {
-                    console.log("Popup: textareaClicked flag reset to false.");
+                    console.error('Popup: error resetting textareaClicked:', chrome.runtime.lastError);
                 }
             });
-        } else {
-            console.log("Popup: textareaClicked flag is false or not set.");
         }
     });
 });
