@@ -16,19 +16,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 });
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  if (request.type === "textarea_clicked") {
-    console.log("Background script received textarea_clicked message.");
-    chrome.storage.local.set({ textareaClicked: true }, function() {
-      if (chrome.runtime.lastError) {
-        console.error("Error setting textareaClicked in storage:", chrome.runtime.lastError);
-        sendResponse({ success: false, error: chrome.runtime.lastError.message });
-      } else {
-        console.log("textareaClicked flag set to true in chrome.storage.local.");
-        sendResponse({ success: true });
-      }
-    });
-    return true;
-  } else if (request.type === "convert_romaji") {
+  if (request.type === "convert_romaji") {
     chrome.storage.local.get(['openai_api_key', 'openai_model'], function(result) {
       const apiKey = result.openai_api_key;
       if (!apiKey) {

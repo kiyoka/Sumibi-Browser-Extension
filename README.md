@@ -11,9 +11,12 @@ sumibi.elと同様に、OpenAIのChatCompletion APIを使ってモードレス�
 - Microsoft Edge
 
 ## 主な機能(予定)
-コンテンツ内のinput type=text、textarea、およびcontenteditable属性を持つdiv要素でローマ字日本語入力ができるようにする拡張です。
-ローマ字から日本語に変換するロジックは、OpenAIのAPIで実現します。
-- ダイアログが、編集対象の入力フォームと重なる位置に表示され、透明度70%程度の半透明で下のコンテンツが見えるようになります。Ctrl+Jを押すと、カーソル位置から前方のローマ字のみを日本語に変換し、カーソル位置の直前にスペースを2回入力すると同じ変換動作を行います。
+
+- input[type="text"]、textarea、およびcontenteditable属性を持つ要素でローマ字日本語入力を実現
+- ローマ字→日本語変換にはOpenAIのChatCompletion APIを使用
+- 編集対象の入力フォーム上に半透明（約70%）のダイアログを重ねて表示
+- Ctrl+Jキーで編集ダイアログを開き、変換操作を開始できる
+- Ctrl+Jキーまたはスペース2回連続入力でカーソル手前のローマ字文字列を日本語に変換
 
 ## 設定
 OpenAI APIキーと使用するChatCompletionモデル名は拡張機能のオプション画面から設定してください。
