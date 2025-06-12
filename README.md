@@ -15,6 +15,7 @@ sumibi.elと同様に、OpenAIのChatCompletion APIを使ってモードレス�
 - input[type="text"]、textarea、およびcontenteditable属性を持つ要素でローマ字日本語入力を実現
 - ローマ字→日本語変換にはOpenAIのChatCompletion APIを使用
 - 編集対象の入力フォーム上に半透明（約70%）のダイアログを重ねて表示
+- Ctrl+Jキーで編集ダイアログを開き、変換操作を開始できる
 - Ctrl+Jキーまたはスペース2回連続入力でカーソル手前のローマ字文字列を日本語に変換
 
 ## 設定

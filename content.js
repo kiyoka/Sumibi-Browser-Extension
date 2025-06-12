@@ -171,3 +171,17 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
     }
 });
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'j' && e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey) {
+        if (document.getElementById('sumibi-input-dialog-overlay')) return;
+        const target = document.activeElement;
+        const tag = target.tagName?.toLowerCase();
+        if ((tag === 'input' && target.type === 'text') ||
+            tag === 'textarea' ||
+            (tag === 'div' && target.getAttribute('contenteditable') === 'true')) {
+            e.preventDefault();
+            showInputDialog(target);
+        }
+    }
+});
