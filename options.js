@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (result.openai_api_key) {
       apiKeyInput.value = result.openai_api_key;
     }
-    modelInput.value = result.openai_model || 'gpt-4.1';
+    modelInput.value = result.openai_model || getDefaultOpenAIModel();
   });
 
   saveBtn.addEventListener('click', () => {

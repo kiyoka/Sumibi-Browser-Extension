@@ -1,4 +1,5 @@
 // background.js
+importScripts('config.js');
 console.log("Background script loaded.");
 
 chrome.runtime.onInstalled.addListener(() => {
@@ -23,7 +24,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         sendResponse({ success: false, error: 'OpenAI APIキーが設定されていません。設定画面でAPIキーを入力してください。' });
         return;
       }
-      const model = result.openai_model || 'gpt-4.1';
+      const model = result.openai_model || getDefaultOpenAIModel();
       const roman = request.roman;
       const surrounding = request.surrounding || '';
       const messages = [

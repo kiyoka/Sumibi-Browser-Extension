@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
         if (modelElem) {
-            modelElem.textContent = result.openai_model || 'gpt-4.1';
+            modelElem.textContent = result.openai_model || getDefaultOpenAIModel();
         }
     });
 });
