@@ -6,12 +6,9 @@ function showInputDialog(targetInput) {
     }
     const overlay = document.createElement('div');
     overlay.id = 'sumibi-input-dialog-overlay';
-    // スタイルは content.css で定義 (#sumibi-input-dialog-overlay)
     const dialog = document.createElement('div');
     dialog.id = 'sumibi-input-dialog';
-    // スタイルは content.css で定義 (#sumibi-input-dialog)
     const editField = document.createElement('textarea');
-    // スタイルは content.css で定義 (textarea の margin-bottom)
     // サイズをターゲットの入力欄に合わせる
     const rect = targetInput.getBoundingClientRect();
     editField.style.width = rect.width + 'px';
@@ -22,7 +19,6 @@ function showInputDialog(targetInput) {
     }
     // 高さをターゲットの入力欄に合わせる
     editField.style.height = rect.height + 'px';
-    // ダイアログ位置は JS で動的設定
     const computed = window.getComputedStyle(dialog);
     const padding = parseInt(computed.paddingTop, 10) || 0;
     dialog.style.top  = (rect.top + window.scrollY - padding) + 'px';
