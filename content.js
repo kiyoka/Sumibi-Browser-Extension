@@ -6,32 +6,12 @@ function showInputDialog(targetInput) {
     }
     const overlay = document.createElement('div');
     overlay.id = 'sumibi-input-dialog-overlay';
-    Object.assign(overlay.style, {
-        position: 'fixed',
-        top: '0',
-        left: '0',
-        right: '0',
-        bottom: '0',
-        backgroundColor: 'rgba(0,0,0,0.5)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        zIndex: '9999'
-    });
+    // スタイルは content.css で定義 (#sumibi-input-dialog-overlay)
     const dialog = document.createElement('div');
     dialog.id = 'sumibi-input-dialog';
-    Object.assign(dialog.style, {
-        backgroundColor: '#fff',
-        padding: '20px',
-        borderRadius: '4px',
-        boxShadow: '0 2px 10px rgba(0,0,0,0.3)',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'stretch',
-        minWidth: '200px'
-    });
+    // スタイルは content.css で定義 (#sumibi-input-dialog)
     const editField = document.createElement('textarea');
-    editField.style.marginBottom = '10px';
+    // スタイルは content.css で定義 (textarea の margin-bottom)
     // サイズをターゲットの入力欄に合わせる
     const rect = targetInput.getBoundingClientRect();
     editField.style.width = rect.width + 'px';
@@ -42,12 +22,11 @@ function showInputDialog(targetInput) {
     }
     // 高さをターゲットの入力欄に合わせる
     editField.style.height = rect.height + 'px';
-    // ダイアログ内のtextareaが元の入力欄と重なる位置に表示
-    dialog.style.position = 'absolute';
-    const padding = parseInt(dialog.style.padding, 10) || 0;
-    dialog.style.top      = (rect.top + window.scrollY - padding) + 'px';
-    dialog.style.left     = (rect.left + window.scrollX - padding) + 'px';
-    dialog.style.opacity  = '0.7';
+    // ダイアログ位置は JS で動的設定
+    const computed = window.getComputedStyle(dialog);
+    const padding = parseInt(computed.paddingTop, 10) || 0;
+    dialog.style.top  = (rect.top + window.scrollY - padding) + 'px';
+    dialog.style.left = (rect.left + window.scrollX - padding) + 'px';
     let initialValue;
     if (targetInput.tagName.toLowerCase() === 'div') {
         initialValue = targetInput.textContent ?? '';
@@ -99,19 +78,12 @@ function showInputDialog(targetInput) {
             document.removeEventListener('keydown', _sumibiOnKeyDown);
         });
     }
+    closeButton.classList.add('apply-btn');
     dialog.appendChild(closeButton);
 
     const cancelButton = document.createElement('button');
     cancelButton.textContent = '×';
-    Object.assign(cancelButton.style, {
-        position: 'absolute',
-        top: '5px',
-        right: '5px',
-        background: 'transparent',
-        border: 'none',
-        fontSize: '16px',
-        cursor: 'pointer'
-    });
+    cancelButton.classList.add('cancel-btn');
     cancelButton.addEventListener('click', function(e) {
         e.stopPropagation();
         document.body.removeChild(overlay);
