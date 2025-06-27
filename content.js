@@ -14,11 +14,15 @@ function showInputDialog(targetInput) {
     editField.style.width = rect.width + 'px';
     if (targetInput.tagName.toLowerCase() === 'textarea') {
         editField.rows = targetInput.rows || 4;
+    } else if (targetInput.isContentEditable) {
+        editField.rows = 2;
     } else {
         editField.rows = 1;
     }
     // 高さをターゲットの入力欄に合わせる
-    editField.style.height = rect.height + 'px';
+    if (!targetInput.isContentEditable) {
+        editField.style.height = rect.height + 'px';
+    }
     const computed = window.getComputedStyle(dialog);
     const padding = parseInt(computed.paddingTop, 10) || 0;
     dialog.style.top  = (rect.top + window.scrollY - padding) + 'px';
