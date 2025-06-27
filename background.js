@@ -1,4 +1,5 @@
 // background.js
+importScripts('config.js');
 console.log("Background script loaded.");
 
 chrome.runtime.onInstalled.addListener(() => {
@@ -17,16 +18,31 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.type === "convert_romaji") {
-    chrome.storage.local.get(['openai_api_key', 'openai_model'], function(result) {
-      const apiKey = result.openai_api_key;
-      if (!apiKey) {
-        sendResponse({ success: false, error: 'OpenAI APIキーが設定されていません。設定画面でAPIキーを入力してください。' });
-        return;
-      }
-      const model = result.openai_model || 'gpt-4.1';
-      const roman = request.roman;
-      const surrounding = request.surrounding || '';
-      const messages = [
+    chrome.storage.local.get(
+      ['openai_api_key', 'openai_model', 'google_api_key', 'google_model', 'provider'],
+      function(result) {
+        const provider = result.provider === 'google' ? 'google' : 'openai';
+        const apiKey = provider === 'google'
+          ? result.google_api_key
+          : result.openai_api_key;
+        if (!apiKey) {
+          sendResponse({
+            success: false,
+            error: provider === 'google'
+              ? 'Gemini APIキーが設定されていません。設定画面でAPIキーを入力してください。'
+              : 'OpenAI APIキーが設定されていません。設定画面でAPIキーを入力してください。'
+          });
+          return;
+        }
+        const model = provider === 'google'
+          ? (result.google_model || getDefaultGoogleModel())
+          : (result.openai_model || getDefaultOpenAIModel());
+        const endpoint = provider === 'google'
+          ? 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions'
+          : 'https://api.openai.com/v1/chat/completions';
+        const roman = request.roman;
+        const surrounding = request.surrounding || '';
+        const messages = [
         { role: "system", content:
             "あなたはローマ字とひらがなを日本語に変換するアシスタントです。" +
             "ローマ字の 「nn」 は 「ん」と読んでください。" +
@@ -74,20 +90,21 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             "のような文章になっています。周辺の文脈を見てそれに合った語彙を選んでください。: " + roman
         }
       ];
-      fetch("https://api.openai.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + apiKey
-        },
-        body: JSON.stringify({ model: model, messages: messages })
-      })
-        .then(response => response.json())
-        .then(data => {
-          const resultText = data.choices?.[0]?.message?.content?.trim() ?? "";
-          sendResponse({ success: true, result: resultText });
+        // ChatCompletion API 形式で呼び出し
+        fetch(endpoint, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + apiKey
+          },
+          body: JSON.stringify({ model: model, messages: messages })
         })
-        .catch(error => sendResponse({ success: false, error: error.toString() }));
+          .then(response => response.json())
+          .then(data => {
+            const resultText = data.choices?.[0]?.message?.content?.trim() ?? "";
+            sendResponse({ success: true, result: resultText });
+          })
+          .catch(error => sendResponse({ success: false, error: error.toString() }));
     });
     return true;
   }
